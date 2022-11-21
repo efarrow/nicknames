@@ -8,7 +8,7 @@ import sys
 
 from collections import defaultdict
 
-from constants import ADDITIONAL_PSEUDONYMS, PSEUDONYM_ANON, SESSION_FIELD_NAME, TEXT_FIELD_NAME, TOPIC_FIELD_NAME, TMP_FIELD_NAME, USER_FIELD_NAME, USER_ID_FIELD_NAME
+from constants import ADDITIONAL_PSEUDONYMS, PSEUDONYM_ANON, SESSION_FIELD_NAME, TEXT_FIELD_NAME, TOPIC_FIELD_NAME, USER_FIELD_NAME
 from messages import load_message_data, save_message_data
 from names import combine_counters, create_counter, load_names, sort_names, update_counter, write_names
 
@@ -26,9 +26,12 @@ def find_pseudonyms(df):
 def replace_names(df, mapping, *, group_by=None, count_upper_bounds=False, **kwargs):
     all_conflicts = set()
     all_counts = create_counter()
+    temp_field_name = None
     if count_upper_bounds or group_by is None or group_by == GROUP_BY_NONE:
-        df[TMP_FIELD_NAME] = 1
-        field_name = TMP_FIELD_NAME
+        # create a temporary field for grouping
+        temp_field_name = get_temp_field_name(df)
+        df[temp_field_name] = 1
+        field_name = temp_field_name
     elif group_by == GROUP_BY_TOPIC:
         field_name = TOPIC_FIELD_NAME
     elif group_by == GROUP_BY_SESSION:
@@ -48,8 +51,8 @@ def replace_names(df, mapping, *, group_by=None, count_upper_bounds=False, **kwa
             combine_counters(all_counts, counts)
             # find name conflicts in this group
             all_conflicts.update(find_conflicts(replacements))
-    if TMP_FIELD_NAME in df.columns:
-        df.drop(columns=TMP_FIELD_NAME, inplace=True)
+    if temp_field_name:
+        df.drop(columns=temp_field_name, inplace=True)
     # report name conflicts
     for conflict in sorted(all_conflicts):
         name, repl_new, repl_orig = conflict
@@ -96,6 +99,15 @@ def find_conflicts(replacements):
                 conflicts.add((name, entry[0], orig[0]))
     return conflicts
 
+# generate an unused field name
+def get_temp_field_name(df, base_name='tmp'):
+    counter = 1
+    tmp_field_name = base_name
+    while tmp_field_name in df.columns:
+        tmp_field_name = f'{base_name}{counter}'
+        counter += 1
+    return tmp_field_name
+
 def main():
     parser = argparse.ArgumentParser(description='Replace names with pseudonyms and return substitution counts')
     parser.add_argument('input_file', metavar='input-file', help='Input CSV file')
@@ -104,7 +116,6 @@ def main():
     parser.add_argument('--used-names', help='Output text file (optional)')
     parser.add_argument('--by', help='Grouping option', choices=GROUP_BY_CHOICES, default=GROUP_BY_SESSION)
     parser.add_argument('--anon', help='Use the same pseudonym for every name', action='store_true')
-    parser.add_argument('--debug', help='Make changes to help debugging', action='store_true')
     parser.add_argument('-q', help='Sort names by frequency', action='store_true')
     parser.add_argument('-c', help='Output counts', action='store_true')
     parser.add_argument('-v', help='Verbose output', action='store_true')
@@ -114,13 +125,9 @@ def main():
     df = load_message_data(args.input_file)
     names = replace_names(df, names, group_by=args.by, anon_only=args.anon, verbose=args.v)
     if args.output_file:
-        if args.debug:
-            from constants import PARENT_USER_FIELD_NAME
-            df.drop(columns=USER_ID_FIELD_NAME, inplace=True, errors='ignore')
-            df[USER_FIELD_NAME].replace(regex={'USER_': ''}, inplace=True)
-            df[PARENT_USER_FIELD_NAME].replace(regex={'USER_': ''}, inplace=True)
         save_message_data(df, args.output_file)
-    write_names(args.used_names, names, by_frequency=args.q, with_counts=args.c, verbose=args.v)
+    if args.used_names:
+        write_names(args.used_names, names, by_frequency=args.q, with_counts=args.c, verbose=args.v)
 
 if __name__ == '__main__':
     # execute only if run as a script
