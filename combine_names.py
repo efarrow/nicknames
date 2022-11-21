@@ -34,9 +34,9 @@ def combine_names(filenames, args, *, subtract=False, **kwargs):
         # remove the unwanted name variants
         for pseudonym in list(orig_names):
             for name in names[pseudonym]:
-                del orig_names[pseudonym][name]
+                orig_names[pseudonym].pop(name, None)
             for name in known_names:
-                del orig_names[pseudonym][name]
+                orig_names[pseudonym].pop(name, None)
         names = orig_names
 
     return normalise_counter(names)
