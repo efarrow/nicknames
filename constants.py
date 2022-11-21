@@ -1,30 +1,37 @@
 # © All rights reserved. Elaine Farrow, University of Edinburgh, United Kingdom, 2022
 
-# field names in our data
-POST_FIELD_NAME = 'postId'
-PARENT_FIELD_NAME = 'postParentId'
-USER_ID_FIELD_NAME = 'postUserId'
-USER_FIELD_NAME = 'postUserPseudonym'
-PARENT_USER_FIELD_NAME = 'parentUserPseudonym'
-SESSION_FIELD_NAME = 'courseCategoryId'
-TOPIC_FIELD_NAME = 'topicId'
-TIME_FIELD_NAME = 'postCreationTime'
-TEXT_FIELD_NAME = 'postBody'
-TMP_FIELD_NAME = 'tmp'
+import json
+import os
 
-# value to use for messages with no parent
-NO_PARENT_VALUE = '0'
+# load config file from script directory
+dir_path = os.path.dirname(os.path.realpath(__file__))
+with open(f'{dir_path}/config.json') as f:
+    CONFIG = json.load(f)
 
-# column names in the CSV file of names
-CSV_NAME_LABEL = 'fullname'
-CSV_PSEUDONYM_LABEL = 'userid'
+FIELDS = CONFIG['message_fields']
+CSV_FIELDS = CONFIG['csv_name_fields']
+VALUES = CONFIG['values']
+
+# field names in the message data
+POST_FIELD_NAME = FIELDS['post_id']
+PARENT_FIELD_NAME = FIELDS['parent_post_id']
+USER_ID_FIELD_NAME = FIELDS['user_id']
+USER_FIELD_NAME = FIELDS['pseudonym']
+PARENT_USER_FIELD_NAME = FIELDS['parent_pseudonym']
+SESSION_FIELD_NAME = FIELDS['session_id']
+TOPIC_FIELD_NAME = FIELDS['topic_id']
+TIME_FIELD_NAME = FIELDS['time']
+TEXT_FIELD_NAME = FIELDS['text']
+
+# column names in the CSV files of student names
+CSV_NAME_LABEL = CSV_FIELDS['name']
+CSV_PSEUDONYM_LABEL = CSV_FIELDS['pseudonym']
 
 # additional pseudonyms for users added manually
-ADDITIONAL_PSEUDONYMS = ['9998', '9999']
+ADDITIONAL_PSEUDONYMS = VALUES['additional_pseudonyms']
+
+# parent pseudonym for messages with no parent
+NO_PARENT_VALUE = VALUES['pseudonym_no_parent']
 
 # pseudonyms for all anon entries
-PSEUDONYM_ANON = 'USER'
-
-# prefix for all linked pseudonyms
-PSEUDONYM_PREFIX = 'USER_'
-
+PSEUDONYM_ANON = VALUES['pseudonym_anon']

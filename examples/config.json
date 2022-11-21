@@ -1,0 +1,25 @@
+{
+    "csv_name_fields": {
+        "name": "fullname",
+        "pseudonym": "userid"
+    },
+    "message_fields": {
+        "parent_post_id": "postParentId",
+        "parent_pseudonym": "parentUserPseudonym",
+        "post_id": "postId",
+        "pseudonym": "postUserPseudonym",
+        "session_id": "courseCategoryId",
+        "text": "postBody",
+        "time": "postCreationTime",
+        "topic_id": "topicId",
+        "user_id": "postUserId"
+    },
+    "values": {
+        "additional_pseudonyms": [
+            "9998",
+            "9999"
+        ],
+        "pseudonym_anon": "USER",
+        "pseudonym_no_parent": "0"
+    }
+}
