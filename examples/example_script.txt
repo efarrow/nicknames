@@ -1,5 +1,11 @@
 # © All rights reserved. Elaine Farrow, University of Edinburgh, United Kingdom, 2022
 
+########################
+# REQUIRED ENVIRONMENT #
+########################
+
+# export NICKNAMES_DIR=/path/to/nicknames
+
 #######################################
 # REQUIRED EXTERNALLY GENERATED FILES #
 #######################################
@@ -43,7 +49,8 @@ python3 $NICKNAMES_DIR/generate_columns.py messages_sorted.csv messages_plus.csv
 ########################
 
 # NOTE: to run the Textwash name extraction, additional setup is needed
-# Export the environment variable TEXTWASH_DIR pointing to the code dir
+# Export the environment variable TEXTWASH_DIR, pointing to the code,
+# or add it to the python path
 # Activate a conda environment that contains Textwash
 
 # Find names in the messages using Textwash
