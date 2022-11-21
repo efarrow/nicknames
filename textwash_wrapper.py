@@ -10,9 +10,7 @@ import torch
 
 from collections import defaultdict, Counter
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
 TEXTWASH_DIR = os.environ.get('TEXTWASH_DIR')
-
 sys.path.insert(0, TEXTWASH_DIR)
 
 from config import Config

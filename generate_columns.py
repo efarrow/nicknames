@@ -8,9 +8,6 @@ from constants import NO_PARENT_VALUE, PARENT_FIELD_NAME, PARENT_USER_FIELD_NAME
 from messages import load_message_data, save_message_data
 
 def generate_columns(df):
-    if USER_FIELD_NAME not in df.columns:
-        from constants import USER_ID_FIELD_NAME
-        df.insert(df.columns.get_loc(USER_ID_FIELD_NAME), USER_FIELD_NAME, df[USER_ID_FIELD_NAME])
     mapping = {POST_FIELD_NAME: PARENT_FIELD_NAME, USER_FIELD_NAME: PARENT_USER_FIELD_NAME}
     parents = df[[POST_FIELD_NAME, USER_FIELD_NAME]].rename(columns=mapping)
     merged = df[[PARENT_FIELD_NAME]].merge(parents, on=PARENT_FIELD_NAME, how='left', sort=False, validate='many_to_one').fillna(NO_PARENT_VALUE, downcast='infer')
