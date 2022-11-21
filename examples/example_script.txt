@@ -4,7 +4,9 @@
 # REQUIRED ENVIRONMENT #
 ########################
 
-# export NICKNAMES_DIR=/path/to/nicknames
+# Export NICKNAMES_DIR=/path/to/nicknames
+# Create a local config.json file in $NICKNAMES_DIR
+# Copy the one from $NICKNAMES_DIR/examples
 
 #######################################
 # REQUIRED EXTERNALLY GENERATED FILES #
