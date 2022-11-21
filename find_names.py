@@ -32,7 +32,7 @@ def find_names(df, find_to_names, find_from_names):
         if not re.fullmatch(r'\D+', name):
             # exclude names containing digits
             continue
-        # collect all the names linked with this pseudonym
+        # collect all the names linked with each pseudonym
         for pseudonym, count in pseudonyms.most_common():
             # skip unattributed names
             if pseudonym != NO_PARENT_VALUE:
@@ -62,7 +62,10 @@ def find_names_textwash(df, find_to_names, find_from_names):
         columns += [USER_FIELD_NAME]
     posts = df[columns]
     data = [(users, body) for _, (body, *users) in posts.iterrows()]
-    return Washer().find_names(data)
+    result = Washer().find_names(data)
+    # skip unattributed names
+    result.pop(NO_PARENT_VALUE, None)
+    return result
 
 def main():
     parser = argparse.ArgumentParser(description='Find personal names for each pseudonym')
@@ -74,8 +77,8 @@ def main():
     parser.add_argument('-c', help='Output counts', action='store_true')
     parser.add_argument('-v', help='Verbose output', action='store_true')
     parser.add_argument('--method', default=METHOD_REGEX, help='Method to use for searching for names', choices=METHOD_CHOICES)
-    parser.add_argument('--start', type=int, default=0, help='[DEBUG] First row to use')
-    parser.add_argument('--limit', type=int, default=0, help='[DEBUG] Maximum number of rows to use')
+    parser.add_argument('--start', type=int, default=0, help='First message to use')
+    parser.add_argument('--limit', type=int, default=0, help='Maximum number of messages to use')
     args = parser.parse_args()
 
     if not args.t and not args.f:
