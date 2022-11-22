@@ -13,8 +13,7 @@ import matplotlib.ticker as ticker
 import seaborn
 seaborn.set()
 
-# mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black', 'purple', 'pink', 'brown', 'orange', 'teal', 'coral', 'lightblue', 'lime', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold'])
-mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=['blue', 'purple', 'teal', 'turquoise', 'lightblue', 'lime', 'lavender', 'darkgreen', 'tan', 'salmon', 'gold'])
+mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=['blue', 'purple', 'teal', 'skyblue', 'turquoise', 'lime', 'lavender', 'darkgreen'])
 
 from pathlib import Path    
 from names import load_names, sort_names
